@@ -17,8 +17,6 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// slash command endpoint
-
 // SONOS SETUP
 console.log('Searching for Sonos devices...');
 const search = sonos.search();

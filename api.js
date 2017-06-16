@@ -15,6 +15,11 @@ module.exports = (req, res) => {
   if (parts.length > 1) {
     switch (parts[0]) {
       case 'volume':
+        if (/^\+?[1-9][\d]*$/.test(parts[1]) === false) {
+          res.send(`Use a number between 0 and ${process.env.MAX_VOLUME} to set volume`);
+          return;
+        }
+
         if (Number(parts[1]) > process.env.MAX_VOLUME || Number(parts[1] < 0)) {
           res.send(`Use a number between 0 and ${process.env.MAX_VOLUME} to set volume`);
           return;
@@ -50,35 +55,52 @@ module.exports = (req, res) => {
     switch (command) {
       case 'current':
       case 'playing':
+      case 'nowplaying':
         console.log(req.state);
         req.device.currentTrack((err, track) => {
           console.log(track);
           res.send({
             response_type: 'ephemeral',
-            text: `Currently playing: "${track.title}" by ${track.artist}`,
             attachments: [
               {
-
-              }
+                text: `Currently playing: "${track.title}" by ${track.artist}`,
+                color: '#1e1e1e',
+                footer: 'For help with this, try "/sonos help"',
+              },
             ],
           });
         });
         break;
 
       case 'upnext':
+      case 'playlist':
+      case 'queue':
         req.device.getQueue((err, queue) => {
           if (err) throw err;
 
+          // Find the current position in the queue
+          let currentPosition = 0;
           queue.items.forEach((track, index) => {
-            if (track.title === req.state.currentTrack) {
-              const upNext = queue.items.slice(index + 1, index + 4).map((nextTrack, nextIndex) => {
-                return `${nextIndex + 1}. ${nextTrack.title} - ${nextTrack.artist}`;
-              });
-              res.send({
-                response_type: 'emphemeral',
-                text: upNext.join('\n'),
-              });
+            const { title, artist } = req.state.currentTrack;
+            if (track.title === title && track.artist === artist) {
+              currentPosition = index;
             }
+          });
+
+          // Get the next 3 songs and format them nicely
+          const songList = queue.items.slice(currentPosition + 1, currentPosition + 6)
+            .map((t, i) => `${i + 1}. "${t.title}" by ${t.artist}`);
+
+          res.send({
+            response_type: 'ephemeral',
+            attachments: [
+              {
+                title: 'Up next in the queue:',
+                text: songList.join('\n'),
+                color: '#1e1e1e',
+                footer: 'For help with this, try "/sonos help"',
+              },
+            ],
           });
         });
         break;
@@ -130,7 +152,6 @@ module.exports = (req, res) => {
               });
           }
         }
-
         break;
 
       case 'play':
@@ -161,8 +182,61 @@ module.exports = (req, res) => {
         });
         break;
 
+      case 'stop':
+        req.device.stop((err, stopped) => {
+          if (err) throw err;
+          console.log(stopped);
+          lib.jckcthbrt.kaomoji({ search: 'sad' })
+            .then((result) => {
+              res.send({
+                response_type: 'in_channel',
+                text: result.emoji,
+                attachments: [
+                  {
+                    text: `@${req.body.user_name} stopped the queue`,
+                    color: '#1e1e1e',
+                  },
+                ],
+              });
+            });
+        });
+        break;
+
       case 'help':
-        res.send('Available commands:\nplay, pause, skip, upnext, current, add');
+        res.send({
+          response_type: 'ephemeral',
+          text: 'Available commands:',
+          attachments: [
+            {
+              title: '/sonos play',
+              color: '#1e1e1e',
+            },
+            {
+              title: '/sonos pause',
+              color: '#1e1e1e',
+            },
+            {
+              title: '/sonos upnext | queue | playlist',
+              text: 'See the next 3 songs in the queue',
+              color: '#1e1e1e',
+            },
+            {
+              title: '/sonos skip | next',
+              text: 'Request to skip the currently playing song',
+              color: '#1e1e1e',
+            },
+            {
+              title: '/sonos volume <number>',
+              text: `Set the volume to a percentage between 0 and ${process.env.MAX_VOLUME}`,
+              color: '#1e1e1e',
+            },
+            {
+              title: '/sonos current | playing | nowplaying',
+              text: 'See the currently playing song',
+              color: '#1e1e1e',
+            },
+          ],
+        });
         break;
 
       default:
