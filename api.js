@@ -15,12 +15,11 @@ module.exports = (req, res) => {
   if (parts.length > 1) {
     switch (parts[0]) {
       case 'volume':
-        if (/^\+?[1-9][\d]*$/.test(parts[1]) === false) {
-          res.send(`Use a number between 0 and ${process.env.MAX_VOLUME} to set volume`);
-          return;
-        }
-
-        if (Number(parts[1]) > process.env.MAX_VOLUME || Number(parts[1] < 0)) {
+        // TODO: This kind of sucks
+        if (
+          (Number(parts[1]) > process.env.MAX_VOLUME || Number(parts[1] < 0)) ||
+          (/^\+?[1-9][\d]*$/.test(parts[1]) === false)
+        ) {
           res.send(`Use a number between 0 and ${process.env.MAX_VOLUME} to set volume`);
           return;
         }
@@ -46,7 +45,7 @@ module.exports = (req, res) => {
         break;
 
       default:
-        res.send('Bad request');
+        res.send('Bad request, try "/sonos help" for more info.');
     }
   }
 
@@ -178,7 +177,19 @@ module.exports = (req, res) => {
         req.device.pause((err, paused) => {
           if (err) throw err;
           console.log(paused);
-          res.send('Pausing queue...');
+          lib.jckcthbrt.kaomoji({ search: 'sad' })
+            .then((result) => {
+              res.send({
+                reaponse_type: 'in_channel',
+                text: result.emoji,
+                attachments: [
+                  {
+                    text: `@${req.body.user_name} paused the queue`,
+                    color: '#1e1e1e',
+                  },
+                ],
+              });
+            });
         });
         break;
 
@@ -216,6 +227,10 @@ module.exports = (req, res) => {
               color: '#1e1e1e',
             },
             {
+              title: '/sonos stop',
+              color: '#1e1e1e',
+            },
+            {
               title: '/sonos upnext | queue | playlist',
               text: 'See the next 3 songs in the queue',
               color: '#1e1e1e',
@@ -240,7 +255,7 @@ module.exports = (req, res) => {
         break;
 
       default:
-        res.send('Bad request');
+        res.send('Bad request, try "/sonos help" for more info.');
     }
   }
 };
