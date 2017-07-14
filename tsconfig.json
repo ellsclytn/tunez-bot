@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "outDir": "./lib",
+    "rootDirs": [
+      "./src",
+      "./node_modules/@homeaudio/sonos"
+    ],
+    "typeRoots": [
+      "./types",
+      "node_modules/@types"
+    ],
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
