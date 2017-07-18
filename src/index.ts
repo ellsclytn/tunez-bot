@@ -44,7 +44,7 @@ client.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
   const channel = client.dataStore.getChannelByName(process.env.MUSIC_CHANNEL);
   state.updateChannelID(channel.id);
 
-  console.log(chalk.magenta('[Sonny]') + ` Connected to ${team.name} as ${user.name} in channel #${channel.name}`);
+  console.log(chalk.magenta('[Tunez]') + ` Connected to ${team.name} as ${user.name} in channel #${channel.name}`);
 });
 
 // Ensure that each listened message is in the correct format
@@ -52,7 +52,7 @@ client.on(RTM_EVENTS.MESSAGE, async (data) => {
 
   // Private message handler
   if (/^D/.exec(data.channel)) {
-    console.log(`${chalk.magenta('[Sonny]')} Command received from ${chalk.blue('direct message')}`);
+    console.log(`${chalk.magenta('[Tunez]')} Command received from ${chalk.blue('direct message')}`);
     const spotifyApi = await connectToSpotify();
     await slackPrivateHandler(data, client, state, spotifyApi);
     return;
@@ -60,7 +60,7 @@ client.on(RTM_EVENTS.MESSAGE, async (data) => {
 
   // Public handler
   if (!!data.text && data.text.indexOf('!sonos') !== -1 && data.channel === state.channelId) {
-    console.log(`${chalk.magenta('[Sonny]')} Command received from ${chalk.yellow('public')} channel`);
+    console.log(`${chalk.magenta('[Tunez]')} Command received from ${chalk.yellow('public')} channel`);
     await slackPublicHandler(data, client, state);
     return;
   }
@@ -68,7 +68,7 @@ client.on(RTM_EVENTS.MESSAGE, async (data) => {
 
 client.start();
 
-console.log(chalk.magenta('[Sonny]') + ' Searching for devices...');
+console.log(chalk.magenta('[Tunez]') + ' Searching for devices...');
 const searcher = new Search({});
 searcher.on('DeviceAvailable', async (device, model) => {
   const sonos = new Sonos(device.host);

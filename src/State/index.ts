@@ -39,7 +39,7 @@ class State {
   }
 
   public updateDevice (device: any) {
-    console.log(chalk.magenta('[Sonny]') + ' Device updated!');
+    console.log(chalk.magenta('[Tunez]') + ' Device updated!');
     this.device = device;
   }
 
