@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as parser from 'xml2json';
 import parseTrackMetadata from '../utils/parseTrackMetadata';
 
-import State from '../state';
+import State from '../State';
 
 async function getNowPlaying (state) {
   const trackPosition = await state.device.avTransport.GetPositionInfo();

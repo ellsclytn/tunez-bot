@@ -1,7 +1,7 @@
 import { RtmClient } from '@slack/client';
 import axios from 'axios';
 
-import State from '../state';
+import State from '../State';
 
 export default async function slackPrivateHandler (data: any, client: RtmClient, state: State, spotifyApi: any) {
   const parts = data.text.split(' ');
