@@ -44,7 +44,7 @@ client.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
   const channel = client.dataStore.getChannelByName(process.env.MUSIC_CHANNEL);
   state.updateChannelID(channel.id);
 
-  console.log(chalk.magenta('[Tunez]') + ` Connected to ${team.name} as ${user.name} in channel #${channel.name}`);
+  console.log(chalk.magenta('[Tunez]') + ` Connected to ${team.name} as @${user.name} in channel #${channel.name}`);
 });
 
 // Ensure that each listened message is in the correct format
