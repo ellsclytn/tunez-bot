@@ -49,11 +49,11 @@ client.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
 
 // Ensure that each listened message is in the correct format
 client.on(RTM_EVENTS.MESSAGE, async (data) => {
+  const spotifyApi = await connectToSpotify();
 
   // Private message handler
   if (/^D/.exec(data.channel)) {
     console.log(`${chalk.magenta('[Tunez]')} Command received from ${chalk.blue('direct message')}`);
-    const spotifyApi = await connectToSpotify();
     await slackPrivateHandler(data, client, state, spotifyApi);
     return;
   }
@@ -61,7 +61,7 @@ client.on(RTM_EVENTS.MESSAGE, async (data) => {
   // Public handler
   if (!!data.text && data.text.indexOf('!sonos') !== -1 && data.channel === state.channelId) {
     console.log(`${chalk.magenta('[Tunez]')} Command received from ${chalk.yellow('public')} channel`);
-    await slackPublicHandler(data, client, state);
+    await slackPublicHandler(data, client, state, spotifyApi);
     return;
   }
 });
