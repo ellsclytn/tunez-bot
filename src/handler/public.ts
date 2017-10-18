@@ -7,14 +7,6 @@ import parseTrackMetadata from '../utils/parseTrackMetadata';
 import State from '../State';
 
 export default async function slackPublicHandler (data: any, client: RtmClient, state: State, spotifyApi: any) {
-  if (data.user === 'U37D2KZSP') {
-    try {
-      client.sendMessage(`Nope.`, state.channelId);
-    } catch (err) {
-      console.error(err);
-    }
-    return;
-  }
   // Guard clause to prevent massive sentences
   if (data.text.split(' ').length > 3) {
     try {

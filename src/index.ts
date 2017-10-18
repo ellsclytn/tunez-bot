@@ -59,7 +59,7 @@ client.on(RTM_EVENTS.MESSAGE, async (data) => {
   }
 
   // Public handler
-  if (!!data.text && data.text.indexOf('!sonos') !== -1 && data.channel === state.channelId) {
+  if (!!data.text && data.text.toLowerCase().indexOf('!sonos') !== -1 && data.channel === state.channelId) {
     console.log(`${chalk.magenta('[Tunez]')} Command received from ${chalk.yellow('public')} channel`);
     await slackPublicHandler(data, client, state, spotifyApi);
     return;
