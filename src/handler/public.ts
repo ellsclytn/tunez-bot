@@ -106,8 +106,8 @@ export default async function slackPublicHandler (data: any, client: RtmClient, 
   }
 
   if (data.text.includes('hey')) {
-    const greetings = ['Hey', 'Yo', 'What up', 'Sup', 'Howdy', 'Bro'];
-    const chosen = Math.floor(Math.random() * (greetings.length + 1));
+    const greetings = ['Hey', 'Yo', 'What up', 'Sup', 'Howdy', 'Bro', 'G\'day'];
+    const chosen = Math.floor(Math.random() * greetings.length);
     const greeting = greetings[chosen];
 
     try {

@@ -7,18 +7,11 @@ interface ITrack {
 }
 
 class State {
-  public skipCount: number;
-  public skipRequesters: string[];
-  public currentTrack: ITrack;
-  public playingState: string;
   public device: Sonos;
   public channelId: string;
 
   constructor () {
-    this.skipCount = 0;
-    this.skipRequesters = [];
-    this.currentTrack = null;
-    this.playingState = null;
+    this.channelId = null;
     this.device = null;
   }
 
@@ -26,26 +19,9 @@ class State {
     this.channelId = channelId;
   }
 
-  public updateSkipCount (count: number,  userId: string) {
-    this.skipCount = count;
-    this.skipRequesters = [...this.skipRequesters, userId];
-  }
-
-  public updateCurrentTrack (track: ITrack) {
-    this.currentTrack = {
-      title: track.title,
-      artist: track.artist,
-    };
-  }
-
   public updateDevice (device: any) {
     console.log(chalk.magenta('[Tunez]') + ' Device updated!');
     this.device = device;
-  }
-
-  public resetSkip () {
-    this.skipCount = 0;
-    this.skipRequesters = [];
   }
 }
 
