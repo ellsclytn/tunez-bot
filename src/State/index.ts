@@ -1,5 +1,5 @@
 import { Sonos } from '@homeaudio/sonos';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 
 interface ITrack {
   title: string;
