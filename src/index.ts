@@ -6,7 +6,7 @@ import {
   RtmClient,
 } from '@slack/client';
 import axios from 'axios';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { config } from 'dotenv';
 import * as parser from 'xml2json';
 
